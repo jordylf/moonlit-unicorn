@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#020309" />
+    <title>Moonlit Unicorn</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta property="og:title" content="Moonlit Unicorn" />
+    <meta property="og:description" content="A small unicorn floats through clouds under a large moon. Interactive WebGL scene by Odyworks." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <!-- styles load before any script, so the loader is styled from the first paint -->
+    <link rel="stylesheet" href="/src/style.css" />
+    <style>html,body{margin:0;background:#020309;color:#c9cde6}</style>
+    <meta name="description" content="A small unicorn floats through clouds under a large moon. Interactive WebGL scene." />
+  </head>
+  <body>
+    <canvas id="scene" aria-label="A unicorn floats through night clouds beneath a large moon. Drag the unicorn or tap it."></canvas>
+    <div id="loader" role="status" aria-live="polite">
+      <div class="loader-stars" aria-hidden="true"></div>
+      <div class="loader-core">
+        <div class="loader-moon" aria-hidden="true"><span class="loader-orbit"><i></i></span></div>
+        <p class="loader-line">Waking the stars</p>
+        <div class="loader-track"><div class="loader-bar"></div></div>
+        <span class="loader-pct">0%</span>
+      </div>
+      <span class="sr-only">Loading scene</span>
+    </div>
+    <div id="watermark" aria-hidden="true">Odyworks</div>
+    <div id="error" hidden></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

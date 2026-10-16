@@ -1,0 +1,385 @@
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #020309;
+  color: #c9cde6;
+  font: 13px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+#scene {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#loader {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 42%, #0b1030 0%, #050719 45%, #020309 100%);
+  transition: opacity 2.4s ease, visibility 0s linear 2.4s;
+  pointer-events: none;
+}
+
+#loader.done {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* twinkling stars (dots are added by main.ts) */
+.loader-stars {
+  position: absolute;
+  inset: 0;
+}
+
+.loader-stars i {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #f1eeff;
+  box-shadow: 0 0 6px rgba(220, 215, 255, 0.8);
+  opacity: 0.15;
+  animation: twinkle var(--d, 3s) ease-in-out var(--delay, 0s) infinite;
+}
+
+@keyframes twinkle {
+  50% {
+    opacity: 0.9;
+    transform: scale(1.4);
+  }
+}
+
+.loader-core {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+}
+
+/* a small moon that breathes and floats, a sparkle circling it */
+.loader-moon {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 36%, #fffaf0 0%, #f2e9d8 45%, #d9d2ea 100%);
+  box-shadow: 0 0 22px rgba(255, 244, 222, 0.45), 0 0 70px rgba(138, 154, 214, 0.35);
+  animation: moon-float 4.2s ease-in-out infinite, moon-glow 2.8s ease-in-out infinite;
+}
+
+.loader-orbit {
+  position: absolute;
+  inset: -16px;
+  animation: orbit 3.6s linear infinite;
+}
+
+.loader-orbit i {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  margin-left: -2.5px;
+  border-radius: 50%;
+  background: #ffd9a0;
+  box-shadow: 0 0 10px 2px rgba(255, 210, 150, 0.8);
+}
+
+@keyframes moon-float {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes moon-glow {
+  50% {
+    box-shadow: 0 0 30px rgba(255, 244, 222, 0.6), 0 0 90px rgba(138, 154, 214, 0.45);
+  }
+}
+
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loader-line {
+  margin: 0;
+  min-height: 1.5em;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: rgba(214, 220, 245, 0.7);
+  transition: opacity 0.5s ease;
+}
+
+.loader-line.swap {
+  opacity: 0;
+}
+
+.loader-track {
+  width: 140px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(201, 205, 230, 0.12);
+  overflow: hidden;
+}
+
+.loader-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #8a9ad6, #f1eeff, #ffd9a0);
+  box-shadow: 0 0 10px rgba(240, 236, 255, 0.7);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.loader-pct {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 217, 160, 0.75);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader-stars i,
+  .loader-moon,
+  .loader-orbit {
+    animation: none;
+  }
+}
+
+#error {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 14px 16px;
+  border: 1px solid #ff5d7a;
+  background: #1a0710;
+  color: #ffd5dd;
+  font: 12px/1.55 ui-monospace, "Cascadia Code", Consolas, monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+#scene:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 217, 160, 0.35);
+}
+
+/* bottom interaction guide */
+.guide {
+  position: fixed;
+  left: 50%;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: calc(100vw - 32px);
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(9, 12, 30, 0.42);
+  border: 1px solid rgba(190, 200, 255, 0.1);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  backdrop-filter: blur(12px) saturate(120%);
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  transition: opacity 1.4s ease, transform 1.4s ease;
+}
+
+.guide.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.guide button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.guide button:focus-visible {
+  outline: 1px solid rgba(255, 217, 160, 0.7);
+  outline-offset: 1px;
+}
+
+.guide-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  padding: 6px 11px;
+  border-radius: 999px;
+  color: rgba(230, 233, 250, 0.8);
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.guide-count {
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 217, 160, 0.85);
+}
+
+.guide-list {
+  display: flex;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.guide-list::-webkit-scrollbar {
+  display: none;
+}
+
+.guide.collapsed .guide-list {
+  display: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  white-space: nowrap;
+  color: rgba(214, 220, 245, 0.6) !important;
+  transition: color 0.5s ease, background-color 0.5s ease;
+}
+
+.chip:hover,
+.chip:focus-visible {
+  color: rgba(240, 242, 255, 0.95) !important;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.chip svg {
+  flex: none;
+  transition: color 0.5s ease, filter 0.5s ease;
+}
+
+.chip.done {
+  color: rgba(246, 240, 226, 0.92) !important;
+}
+
+.chip.done svg {
+  color: #ffd9a0;
+  filter: drop-shadow(0 0 4px rgba(255, 210, 150, 0.75));
+}
+
+.chip .short {
+  display: none;
+}
+
+.chip-detail {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+}
+
+.chip-detail:empty {
+  display: none;
+}
+
+.chip.pulse {
+  animation: chip-pulse 1s ease;
+}
+
+@keyframes chip-pulse {
+  from {
+    background-color: rgba(255, 217, 160, 0.2);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+@media (max-width: 720px) {
+  /* short labels, wrapped: every interaction stays visible on a phone */
+  .guide {
+    left: 12px;
+    right: 12px;
+    max-width: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: 18px;
+    font-size: 11.5px;
+    transform: translateY(8px);
+  }
+  .guide.visible {
+    transform: none;
+  }
+  .guide.collapsed {
+    right: auto;
+    border-radius: 999px;
+  }
+  .guide-list {
+    flex-wrap: wrap;
+    justify-content: center;
+    overflow: visible;
+  }
+  .chip {
+    padding: 6px 9px;
+    gap: 5px;
+  }
+  .chip .long {
+    display: none;
+  }
+  .chip .short {
+    display: inline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide,
+  .chip,
+  .chip svg {
+    transition: none;
+  }
+  .chip.pulse {
+    animation: none;
+  }
+}
+
+/* brand watermark, top of the screen; never blocks interaction */
+#watermark {
+  position: fixed;
+  top: max(14px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  pointer-events: none;
+  user-select: none;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(232, 228, 255, 0.42);
+  text-shadow: 0 0 12px rgba(160, 150, 255, 0.25);
+}
